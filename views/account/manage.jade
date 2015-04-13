@@ -1,0 +1,15 @@
+extends ../layout
+block scripts
+  script(src='/javascripts/manage.js')
+block content
+  p Members in account:
+  div(id='members')
+
+  p Add new members:
+  div(class='input-form')
+    form(method='post', action='/account/register')
+        div
+            label(for='username') Name
+            input(type='text', id='name', name='name')
+        div
+            input(type='submit', id='add', name='add')

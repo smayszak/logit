@@ -1,0 +1,28 @@
+extends layout
+block scripts
+  script(src='/javascripts/logit.js')
+
+block content
+  div(class='input-form')
+    form(method='post', action='/logit')
+      div 
+        label(for='category') Category
+        select(type='text', id='category', name='category')
+      div
+        label(for='Cost') Cost
+        input(type='number', step='0.01', placeholder='0.00', id='cost', name='cost')
+      div
+        label(for='dt') Date
+        input(type='datetime-local', id='dt', name='dt')
+      div
+        input(type='hidden', id='payment', name='payment', value='cash')
+        div(id='cash', class='press_btn press_btn_selected') Cash
+        div(id='credit', class='press_btn') Credit
+      div
+        label(id="comments_label", for='comments') Comments
+        input(type='text', id='comments', placeholder='comments here...', name='comments')
+      div
+        input(type='hidden', id='tz', name='tz')
+      div
+        input(type='button', class="disabledForm", id='sendit' value="Save")
+  div(id='lastitem')

@@ -1,0 +1,31 @@
+extends ../layout
+block cssfiles
+    link(rel='stylesheet', href='/stylesheets/report.css')
+block scripts
+    script(src='/javascripts/report.js')
+block content
+  div(id='report_flyout' class='rptup')
+    div(id='report_options',style="display:none;")
+      div(class='input-form')
+        form(id='rpt_options',method='none')
+          div
+            label(for='sd') Start Date
+            input(type='date', id='sd', name='sd')
+          div
+            label(for='ed') End Date
+            input(type='date', id='ed', name='ed')
+          div
+            input(type='hidden', id='tz', name='tz')
+          div
+            label(for='rp') Report Type
+            select(type='text', id='rp', name='rp')
+              option(selected)= 'Grid'
+              option= '...'
+          div
+              input(type='submit', id='getit')
+    div(id='up_down' class='arrowtop')
+      h1(id='ad') &#9660;
+      h1(id='au', style="display:none;") &#9650;
+  p(id='rpt_date')
+  div(id='report_content')
+  div(id='return')

@@ -1,0 +1,25 @@
+extends ../layout
+block scripts
+  script(src='/javascripts/edit.js')
+block cssfiles
+  link(rel='stylesheet', href='/stylesheets/report.css')
+block content
+  script.
+    var results="#{data}";
+
+  h2 Category:
+    = cat
+  table(class='rpt_table')
+    thead
+      tr
+        td Cost
+        td payment
+        td Date
+        td Comments
+    tbody
+    each val in data
+      tr(data-id=val.id)
+        td= val.cost
+        td= val.payment
+        td= val.date
+        td= val.comments

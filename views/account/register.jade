@@ -1,0 +1,18 @@
+extends ../layout
+block content
+  h3 Register
+  div(class='input-form')
+    form(method='post', action='/account/register')
+      div
+        label(for='username') User Name
+        input(type='text', id='username', name='username')
+      div
+        label(for='password') Password
+        input(type='password', id='password', name='password')
+      div
+        label(for='password') Retype Password
+        input(type='password', id='password-validation', name='password-validation')
+      div
+        input(type='submit', id='register', name='register')
+  div(id='createpage')
+    p After creating an account you can add any number of users to the account and for each user you can specify any number of categories you wish to log against

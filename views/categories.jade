@@ -1,0 +1,17 @@
+extends layout
+block scripts
+    script(src='/javascripts/categories.js')
+block content
+  h1= title
+  div(class='input-form')
+    form(method='post', action='/categories')
+      div
+        label(for='title') Title
+        input(type='text',id='title', name='title')
+      div
+        label(for='owner') Owner
+        select(type='text', id='owner', name='owner')
+      div
+        input(type='submit', id='sendit')
+  p Categories:
+  div(id='categories')
