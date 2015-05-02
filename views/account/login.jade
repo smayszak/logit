@@ -1,11 +1,11 @@
-extends layout
+extends ../layout
 
 block content
-  p Welcome to Accountable!
+  p Welcome to Logit!
   p Please sign in or
-    a(href='/account/register', name='register') register
+    a(href='/account/register', name='register')&nbspregister
   div(class='input-form')
-    form(method='post', action='/')
+    form(method='post', action='/account/login')
       div 
         label(for='username') User Name
         input(type='text', id='username', name='username')

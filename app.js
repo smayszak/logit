@@ -8,10 +8,14 @@ var cookieParser = require('cookie-parser')
 var http = require('http');
 var path = require('path');
 
-var account = require('./routes/account');
-var category = require('./routes/category');
-var index = require('./routes/index');
-var logit = require('./routes/logit');
+var account_routes = require('./routes/account/routes');
+var account_service = require('./routes/account/service');
+
+var category_routes = require('./routes/category/routes');
+var category_service = require('./routes/category/service');
+
+var logit_service = require('./routes/transactions/service');
+var logit_routes = require('./routes/transactions/logit');
 var reports = require('./routes/reports');
 
 var app = express();
@@ -34,19 +38,24 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', index.index);
-app.get('/logit', logit.data_entry);
-app.post('/logit', logit.data_write);
-app.get('/category/list', category.category_list);
-app.get('/category/manage', category.categories);
-app.get('/category/default', category.default_category);
-app.get('/account/manage', account.manage);
-app.get('/account/register', account.register);
-app.post('/account/register', account.create);
-app.post('/account/login', account.login);
-app.post('/account/logout', account.logout);
-app.get('/account/members', account.members);
-app.post('/account/members', account.newmember);
+app.get('/', account_routes.login);
+app.post('/account/login', account_routes.login_post);
+app.get('/account/manage', account_routes.manage);
+app.get('/account/register', account_routes.register);
+app.post('/account/register', account_routes.create);
+
+app.post('/account/logout', account_service.logout);
+app.get('/account/members', account_service.members);
+app.post('/account/member/create', account_service.member_create);
+
+app.get('/category/manage', category_routes.manage);
+app.get('/category/list', category_service.list);
+app.get('/category/default', category_service.default);
+app.get('/category/delete', category_service.default);
+app.post('/category/create', category_service.create);
+
+app.get('/transactions/logit', logit_routes.data_entry);
+app.post('/transactions/create', logit_service.create);
 
 http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'))

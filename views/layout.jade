@@ -4,9 +4,11 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
     block cssfiles
-    script(src='/javascripts/jquery-2.1.3.min.js')
-    script(src='/javascripts/jquery.cookie.js')
-    script(src='/javascripts/mayheim-money-common.js')
+    script(src='/javascripts/lib/jquery-2.1.3.min.js')
+    script(src='/javascripts/lib/jquery.cookie.js')
+    script(src='/javascripts/account/common.js')
+    script(src='/javascripts/category/common.js')
+    script(src='/javascripts/common.js')
     block scripts
 
   body
@@ -15,7 +17,7 @@ html
         div(id='menu_flyout', class='flyout hide-it')
           ul
             li
-              a(href='/logit', name='logit') Log It!
+              a(href='/transactions/logit', name='logit') Log It!
             li
               a(href='/reports', name='reports') Reports
             li

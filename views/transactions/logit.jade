@@ -1,10 +1,10 @@
-extends layout
+extends ../layout
 block scripts
-  script(src='/javascripts/logit.js')
+  script(src='/javascripts/transactions/logit.js')
 
 block content
   div(class='input-form')
-    form(method='post', action='/logit')
+    form(method='post', action='/transactions/create')
       div 
         label(for='category') Category
         select(type='text', id='category', name='category')

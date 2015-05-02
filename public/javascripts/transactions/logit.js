@@ -22,16 +22,17 @@ $( document ).ready(function() {
         validatedForm = false;
         $("#sendit").attr("value", "Saving...");
         var formData = $('form').serialize();
-        formData += "&user=" + currentUser();
+        formData += "&user=" + accountAccessor.currentUser();
         console.log(formData);
         $.ajax({
-            url: "/logit",
+            url: "/transactions/create",
             data: formData,
             method: 'post'
         }).done(function(data) {
             console.log(data);
             var  last = "<div data-id='"+data.id+"'>Saved. Click her to edit last record</div>";
             $("#cost").val("0.00");
+            $("#comments").val('');
             $("#lastitem").empty();
             $("#lastitem").append(last);
             $("#sendit").attr("value", "Save");
