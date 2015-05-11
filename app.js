@@ -3,20 +3,18 @@
  * Module dependencies.
  */
 
-var express = require('express');
-var cookieParser = require('cookie-parser')
-var http = require('http');
-var path = require('path');
-
-var account_routes = require('./routes/account/routes');
-var account_service = require('./routes/account/service');
-
-var category_routes = require('./routes/category/routes');
-var category_service = require('./routes/category/service');
-
-var logit_service = require('./routes/transactions/service');
-var logit_routes = require('./routes/transactions/logit');
-var reports = require('./routes/reports');
+var express = require('express'),
+    db = require('./model/db'),
+    cookieParser = require('cookie-parser'),
+    http = require('http'),
+    path = require('path'),
+    account_routes = require('./routes/account/routes'),
+    account_service = require('./routes/account/service'),
+    category_routes = require('./routes/category/routes'),
+    category_service = require('./routes/category/service'),
+    logit_service = require('./routes/transactions/service'),
+    logit_routes = require('./routes/transactions/logit'),
+    reports = require('./routes/reports');
 
 var app = express();
 
@@ -39,6 +37,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', account_routes.login);
+app.get('/account', account_service.getAccount);
 app.post('/account/login', account_routes.login_post);
 app.get('/account/manage', account_routes.manage);
 app.get('/account/register', account_routes.register);

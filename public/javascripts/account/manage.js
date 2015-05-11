@@ -26,6 +26,7 @@ var pageAccessor = (function(){
         },
         saveUser: function(newUser){
             pageAccessor.addUser(newUser);
+            accountAccessor.updateUserList(newUser);
             $.ajax({
                 url: "/account/member/create",
                 data: newUser,

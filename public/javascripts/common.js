@@ -1,17 +1,22 @@
 
 $( document ).ready(function() {
     categoryAccessor.setAccount(accountAccessor);
-    var user = accountAccessor.currentUser();
-    if(user != null){
-        $('#active-user').append(user);
-        accountAccessor.updateMembers(homePageAccessor);
+    var loadComplete = function(){
+        console.log('load callback');
+        var user = accountAccessor.currentUser();
+        if(user != null){
+            $('#active-user').append(user);
+            accountAccessor.updateMembers(homePageAccessor);
+        }
+        $("#menu").click(function(){
+            $("#menu_flyout").toggle('hide-it');
+        });
+        $("#menu_users").click(function(){
+            $("#user_flyout").toggle('hide-it');
+        });
     }
-    $("#menu").click(function(){
-        $("#menu_flyout").toggle('hide-it');
-    });
-    $("#menu_users").click(function(){
-        $("#user_flyout").toggle('hide-it');
-    });
+    accountAccessor.load(loadComplete);
+
 });
 
 

@@ -30,7 +30,7 @@ $( document ).ready(function() {
             method: 'post'
         }).done(function(data) {
             console.log(data);
-            var  last = "<div data-id='"+data.id+"'>Saved. Click her to edit last record</div>";
+            var  last = "<div data-id='"+data.id+"'>Saved. Click here to edit last record</div>";
             $("#cost").val("0.00");
             $("#comments").val('');
             $("#lastitem").empty();
