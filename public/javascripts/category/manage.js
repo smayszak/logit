@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+window.runPage = function(){
     accountAccessor.updateMembers(pageAccessor);
     categoryAccessor.updateCategories(pageAccessor);
     $("#sendit").click(function(target){
@@ -8,7 +8,7 @@ $( document ).ready(function() {
         pageAccessor.saveNewCategory(category,owner);
         return false;
     });
-});
+};
 
 var pageAccessor = (function(){
     return {
@@ -26,7 +26,7 @@ var pageAccessor = (function(){
         },
        updateCategories: function(data){
            category_list = data;
-           console.log(category_list);
+           debugLog(category_list);
            for(var idx in category_list){
                pageAccessor.addItem(category_list[idx]);
            }
@@ -39,12 +39,12 @@ var pageAccessor = (function(){
                 data: newCategory,
                 method: 'post'
             }).done(function(data) {
-                console.log(data);
+                debugLog(data);
             });
             pageAccessor.addItem(category);
         },
        addItem: function(category){
-           console.log(category);
+           debugLog(category);
            var item = "<div data-name='"+category+"'>"+category+"</div>";
            $("#categories").append(item);
        }

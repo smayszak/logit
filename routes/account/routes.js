@@ -14,11 +14,11 @@ exports.login_post = function(req, res){
             console.log(err);
             res.render('account/login', { title: 'Accountable' });
         }else {
-            res.cookie('logit', {ref: doc.id}, {maxAge: 365});
-            if(doc.users.length > 0) {
-                res.redirect('/transactions/logit');
+            res.cookie('logit', doc.id, {maxAge: new Date(253402300000000)});
+            if(doc.members.length > 0) {
+                return res.redirect('/transactions/logit');
             }else{
-                res.redirect('account/manage');
+                return res.render('account/manage');
             }
             console.log(doc);
         }
@@ -38,12 +38,24 @@ exports.create = function(req, res){
     }else{
         res.render('account/register');
     }
-    account.save(function(err){
-        if (err){
+    //check for existing account
+    Accounts.findOne({'login' : un}, function (err, existing) {
+        if(err != undefined){
+            //return;
+            res.render('account/register');
+        }
+        if(existing){
+            //TODO: found it -  tell the user we need a new name.
             res.render('account/register');
         }else{
-            res.cookie('logit', {ref: account.id}, {maxAge: 365});
-            res.redirect('account/manage');
+            account.save(function(err){
+                if (err){
+                    return res.render('account/register');
+                }else{
+                    res.cookie('logit', account.id, {maxAge: new Date(253402300000000)});
+                    return res.redirect('account/manage');
+                }
+            });
         }
     });
 }

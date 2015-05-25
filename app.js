@@ -44,7 +44,6 @@ app.get('/account/register', account_routes.register);
 app.post('/account/register', account_routes.create);
 
 app.post('/account/logout', account_service.logout);
-app.get('/account/members', account_service.members);
 app.post('/account/member/create', account_service.member_create);
 
 app.get('/category/manage', category_routes.manage);

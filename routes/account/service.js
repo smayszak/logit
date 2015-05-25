@@ -1,10 +1,6 @@
 var mongoose = require( 'mongoose' );
 var Accounts = mongoose.model( 'account' );
-
-exports.members = function(req, res){
-    var family = ['Steve', 'Elissa', 'West'];
-    res.send(family);
-}
+var Members = mongoose.model( 'member' );
 
 exports.getAccount = function(req, res){
     var id = req.query.id;
@@ -13,20 +9,38 @@ exports.getAccount = function(req, res){
             console.log(err);
             res.render('account/login', { title: 'Accountable' });
         }else {
-            var firstUser = doc.users.length > 0 ? doc.users[0] : null;
+            var firstUser = doc.members.length > 0 ? doc.members[0] : null;
             var account = {
                 id: id,
-                users: doc.users,
+                members: doc.members,
                 currentUser: firstUser
             }
-            return account;
+            res.send(account);
         }
     });
 }
 
 exports.member_create = function(req, res){
-    console.log(req.body);
-    res.send('ok');
+    var id = req.query.id;
+    var newUser = req.body.member;
+    var member = new Members();
+    member.name = newUser;
+    member.created = new Date();
+
+    Accounts.findByIdAndUpdate(
+        id,
+        {$push: {"members": member}},
+        {safe: true, upsert: true},
+        function(err, model) {
+            if (err != undefined) {
+                console.log(err);
+                res.send('error saving new member');
+            } else {
+                res.send(member);
+            }
+        }
+    );
+
 }
 
 exports.logout = function(req, res){

@@ -10,14 +10,14 @@ var categorySchema = new mongoose.Schema({
     index: [Number]
 });
 mongoose.model('category', categorySchema, 'categories');
-var userSchema = new mongoose.Schema({
+var memberSchema = new mongoose.Schema({
     name: String,
     created: Date,
     categories: [categorySchema]
 });
-mongoose.model('user', userSchema);
+mongoose.model('member', memberSchema);
 var accountSchema = new mongoose.Schema({
-    users: [userSchema],
+    members: [memberSchema],
     login: String,
     password: String
 })
