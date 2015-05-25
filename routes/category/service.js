@@ -1,22 +1,10 @@
 /**
  * Created by mayszaks on 5/1/15.
  */
-exports.list = function(req, res){
-    var l = [];
-    if(req.query.user == "West") {
-        l.push('Bar');
-        l.push('Beer');
-    }else if (req.query.user == "Elissa") {
-        l.push('Book');
-        l.push('Coffee');
-        l.push('Clothes');
-    }else {
-        l.push('Electronics');
-        l.push('Gift');
-        l.push('Dinner');
-    }
-    res.send({categories:l});
-};
+var mongoose = require( 'mongoose' );
+var Accounts = mongoose.model( 'account' );
+var Members = mongoose.model( 'member' );
+var Category = mongoose.model('category');
 
 exports.delete = function(req, res){
     console.log(req.body);
@@ -25,7 +13,24 @@ exports.delete = function(req, res){
 
 exports.create = function(req, res){
     console.log(req.body);
-    res.send("ok");
+    var id = req.body.accountId;
+    var owner = req.body.owner;
+    var category = new Category();
+    category.name = req.body.category;
+    Accounts.findById(id, function (err, account) {
+        if(err != undefined){
+            console.log(err);
+            res.send(err);
+        }
+        for(var idx = 0; idx < account.members.length; idx++){
+            if(account.members[idx].name == owner){
+                account.members[idx].categories.push(category);
+            }
+        }
+        account.save();
+        res.send(category);
+    });
+
 };
 
 exports.default = function(req, res){

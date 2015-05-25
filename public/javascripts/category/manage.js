@@ -1,11 +1,13 @@
 window.runPage = function(){
-    accountAccessor.updateMembers(pageAccessor);
+    debugLog("Category runPage: loading data");
     categoryAccessor.updateCategories(pageAccessor);
     $("#sendit").click(function(target){
+        debugLog("Category runPage: preparing to save new category");
         var category = $("#title").val();
-        var owner = $("#owner").val();
+        var ownerName = $("#active-user").text();
+        var accountId = accountAccessor.getAccountId();
         $("#title").val("");
-        pageAccessor.saveNewCategory(category,owner);
+        pageAccessor.saveNewCategory(category,ownerName, accountId);
         return false;
     });
 };
@@ -13,39 +15,36 @@ window.runPage = function(){
 var pageAccessor = (function(){
     return {
         category_list: undefined,
-        updateMembers: function(members){
-            var currentUser = sessionStorage.getItem('current_user');
-            for(var idx = 0; idx < members.length; idx++) {
-                var tag ="<option  ";
-                if(currentUser !== undefined && currentUser ==  members[idx]){
-                    tag +="selected";
-                }
-                tag += ">" + members[idx] + "</option>";
-                $("#owner").append(tag);
-            }
-        },
        updateCategories: function(data){
+           debugLog("Category updateCategories: received category data");
            category_list = data;
            debugLog(category_list);
            for(var idx in category_list){
                pageAccessor.addItem(category_list[idx]);
            }
        },
-        saveNewCategory: function(category, owner){
+        saveNewCategory: function(category, ownerName, accountId){
+            debugLog("Category saveNewCategory: saving new category");
             category_list[category_list.length] = category;
-            var newCategory = {category: category, owner:owner};
+            var newCategory = {category: category, owner:ownerName, accountId: accountId};
             $.ajax({
                 url: "/category/create",
                 data: newCategory,
                 method: 'post'
             }).done(function(data) {
+                debugLog("Category saveNewCategory: received server response");
                 debugLog(data);
+                var member = $("#active-user").text();
+                accountAccessor.updateCategoryForMember(data, member);
+                category_list.push(data);
+                pageAccessor.addItem(data);
             });
-            pageAccessor.addItem(category);
+
         },
        addItem: function(category){
+           debugLog("Category addItem: adding new item");
            debugLog(category);
-           var item = "<div data-name='"+category+"'>"+category+"</div>";
+           var item = "<div data-id='"+category.id+"'>"+category.name+"</div>";
            $("#categories").append(item);
        }
     };

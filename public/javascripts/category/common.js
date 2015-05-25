@@ -4,27 +4,21 @@
 
 var categoryAccessor = (function(){
     return {
-        account: undefined,
+        accountSvc: undefined,
         setAccount: function(accountsvc_ref){
-            debugLog('Category setAccount: settting service ref');
-            account = accountsvc_ref;
+            debugLog('Category setAccount: setting service ref');
+            accountSvc = accountsvc_ref;
         },
         updateCategories: function(pageAccessor){
             debugLog('Category updateCategories: updating categories');
-            $.ajax({
-                url: "/category/list?user="+account.currentUser()
-            }).done(function(data) {
-                debugLog('Category updateCategories: response for category list will update');
-                pageAccessor.updateCategories(data.categories);
-            });
+            var current = accountSvc.getCurrentUser();
+            debugLog('Category updateCategories:current user categories:');
+            debugLog(current.categories);
+            pageAccessor.updateCategories(current.categories);
         },
         defaultCategory: function(pageAccessor){
-            $.ajax({
-                url: "/category/default"
-            }).done(function(data) {
-                debugLog('Category defaultCategory: setting default category');
-                pageAccessor.defaultCategory(data);
-            });
+            debugLog('Category defaultCategory: setting default category');
+            pageAccessor.defaultCategory(accountSvc.getDisplayCategory());
         }
     };
 })();

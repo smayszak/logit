@@ -21,7 +21,7 @@ var accountAccessor = (function(){
                 debugLog('Account load: have account will check if expired');
                 if(account.expireHour < (new Date()).getTime()) {
                     debugLog('Account common: expired, will refresh account');
-                    account = accountAccessor.getAccount(account.id, account.currentUser, callback);
+                    account = accountAccessor.getAccount(account.id, callback);
                 }
             }
             if(account != null){
@@ -39,7 +39,7 @@ var accountAccessor = (function(){
             debugLog('Account parseAuthCookie: have auth cookie');
             return id;
         },
-        getAccount: function(id, currentUser, callback){
+        getAccount: function(id, callback){
             debugLog('Account getAccount: geting account - async');
             $.ajax({
                 url: "/account?id="+id
@@ -50,8 +50,8 @@ var accountAccessor = (function(){
                     var account = {
                         id: data.id,
                         members: data.members,
-                        currentUser: currentUser == null ? data.currentUser : currentUser,
                         expireHour: (new Date()).setHours(new Date().getHours() + 24),
+                        defaultCategory: data.defaultCategory
                     };
                     accountAccessor.saveAccount(account);
                     if(callback != undefined) {
@@ -86,29 +86,50 @@ var accountAccessor = (function(){
             debugLog('Account updateUserList: save to existing list');
             account.members.push(newUser);
             if(account.members.length == 1){
-                account.currentUser = newUser;
+                accountAccessor.setCurrentUser(newUser);
                 window.location = window.location;
             }
+
             debugLog('Account updateUserList: save new members to local copy');
             setJsonToLocal('account', account);
         },
-        currentUser: function(){
-            debugLog('Account currentUser: retrieving current user');
-            var account = getJsonFromLocal('account');
+        setCurrentUser: function(user){
+            localStorage.setItem('active-member', user.name);
+        },
+        getCurrentUser: function(){
+            debugLog('Account getCurrentUser: retrieving current user');
+            var currentUser = localStorage.getItem('active-member');
+            var account = getJsonFromLocal('account');debugLog('Account getCurrentUser: retrieving current user');
             if(account == null){
-                debugLog('Account currentUser: account is null, go register or sign in or something');
+                debugLog('Account getCurrentUser: account is null, go register or sign in or something');
                 window.location = '/account/register';
             }
-            if (account.currentUser == null){
-                debugLog('Account currentUser: current user is null so get set it on the page');
+
+            if (currentUser == null && account.members.length == 0){
+                debugLog('Account getCurrentUser: sessions storage is empty and there are no users');
                 if(!window.location.href.endsWith('/account/manage')){
                     debugLog(window.location);
-                    debugLog('Account currentUser: we are not on manage page - so not much we can do, go there');
+                    debugLog('Account getCurrentUser: we are not on manage page - so not much we can do, go there');
                     window.location = '/account/manage';
                 }
             }
-            debugLog('Account currentUser: have a current user so use it');
-            return account.currentUser;
+            var current = null;
+            if(currentUser == null && account.members.length>0){
+                debugLog('Account getCurrentUser: session storage empty but we hae users, pick first');
+                current = account.members[0];
+                accountAccessor.setCurrentUser(current);
+            }else {
+                debugLog('Account getCurrentUser: restore from saved state');
+                for(var idx = 0; idx < account.members.length; idx++){
+                    if(account.members[idx].name == currentUser){
+                        debugLog('Account getCurrentUser: found our user breaking out of loop');
+                        current = account.members[idx];
+                        break;
+                    }
+                }
+            }
+
+            return current;
         },
         updateUser: function(e, optionalRefresh){
             debugLog('Account updateUser: updating current user');
@@ -124,8 +145,7 @@ var accountAccessor = (function(){
                     break;
                 }
             }
-            account.currentUser = theMember;
-            setJsonToLocal('account', account);
+            accountAccessor.setCurrentUser(theMember);
             if(optionalRefresh == true || optionalRefresh == undefined) {
                 debugLog('Account updateUser: requested page refresh so refreshing');
                 window.location = window.location;
@@ -133,10 +153,32 @@ var accountAccessor = (function(){
         },
         getAccountId: function()
         {
+            debugLog('Account getAccountId: retrieving account id');
             var account = getJsonFromLocal('account');
-            if(account == undefined)
+            if(account == undefined) {
+                debugLog('Account getAccountId: did not find an account id');
                 return '';
+            }
+            debugLog('Account getAccountId: retrieving account id:' + account.id );
             return account.id;
+        },
+        getDisplayCategory: function(){
+            debugLog('Account getDisplayCategory: retrieving default category');
+            return "";
+        },
+        updateCategoryForMember: function(category, member){
+            debugLog('Account updateCategoryForMember: looking for member:'+ member);
+            var account = getJsonFromLocal('account');
+            for(var idx = 0; idx < account.members.length; idx++){
+                if(account.members[idx].name == member){
+                    debugLog('Account updateCategoryForMember: found the member, updating');
+                    account.members[idx].categories.push(category);
+                    setJsonToLocal('account', account);
+                    return;
+                }
+            }
+            debugLog('Account updateCategoryForMember: didnt find it');
         }
+
     };
 })();

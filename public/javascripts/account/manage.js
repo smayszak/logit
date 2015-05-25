@@ -28,7 +28,7 @@ var pageAccessor = (function(){
             var name = target.data("name");
 
             debugLog('Account updateActiveUser: updating user to ' + name);
-            accountAccessor.updateUser(name, false);
+            accountAccessor.updateUser(e, false);
 
             $(".userlist").removeClass('selected-user');
             target.addClass('selected-user');
@@ -47,7 +47,7 @@ var pageAccessor = (function(){
         },
         addUser: function(newUser){
             debugLog('Account addUser: adding new user');
-            var currentUser = accountAccessor.currentUser();
+            var currentUser = accountAccessor.getCurrentUser();
             var tag ="<div class='userlist ";
             if(currentUser !== undefined && currentUser.name ==  newUser.name){
                 tag +="selected-user";

@@ -6,13 +6,13 @@ var mongoose = require( 'mongoose' ),
 mongoose.connect(dbURI);
 
 var categorySchema = new mongoose.Schema({
-    display: String,
-    index: [Number]
+    name: String
 });
 mongoose.model('category', categorySchema, 'categories');
 var memberSchema = new mongoose.Schema({
     name: String,
     created: Date,
+    defaultCategory: [categorySchema],
     categories: [categorySchema]
 });
 mongoose.model('member', memberSchema);
@@ -22,6 +22,7 @@ var accountSchema = new mongoose.Schema({
     password: String
 })
 mongoose.model('account', accountSchema);
+
 var transactionSchema =  new mongoose.Schema({
     category: mongoose.Schema.Types.ObjectId,
     owner: mongoose.Schema.Types.ObjectId,

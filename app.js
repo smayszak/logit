@@ -47,7 +47,6 @@ app.post('/account/logout', account_service.logout);
 app.post('/account/member/create', account_service.member_create);
 
 app.get('/category/manage', category_routes.manage);
-app.get('/category/list', category_service.list);
 app.get('/category/default', category_service.default);
 app.get('/category/delete', category_service.default);
 app.post('/category/create', category_service.create);

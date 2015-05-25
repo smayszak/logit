@@ -18,7 +18,7 @@ $( document ).ready(function() {
             return;
         }
         debugLog('Common: account established, resuming');
-        var user = accountAccessor.currentUser();
+        var user = accountAccessor.getCurrentUser();
         if(user != null){
             debugLog('Common: have a current user setting menu');
             console.log(user);
@@ -47,6 +47,7 @@ window.debug = true;
 window.debugLog = function(message){
     if(window.debug == true){
         console.log(message);
+
     }
 }
 

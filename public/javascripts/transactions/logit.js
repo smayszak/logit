@@ -26,7 +26,7 @@ $( document ).ready(function() {
         validatedForm = false;
         $("#sendit").attr("value", "Saving...");
         var formData = $('form').serialize();
-        formData += "&user=" + accountAccessor.currentUser();
+        formData += "&user=" + accountAccessor.getCurrentUser();
         console.log(formData);
         $.ajax({
             url: "/transactions/create",
@@ -83,15 +83,15 @@ var pageAccessor = (function(){
     return {
         updateCategories: function(data){
            for(var idx = 0; idx< data.length; idx++){
-                var item = "<option data-name='"+data[idx]+"'>" + data[idx] + "</option>";
+                var item = "<option data-id='"+data[idx]._id+"'>" + data[idx].name + "</option>";
                 $("#category").append(item);
             }
         },
         defaultCategory : function(data){
             var options = $('option');
             for(var idx = 0; idx < options.length; idx++){
-                var optionvalue = $(options[idx]).data('name');
-                if(optionvalue == data){
+                var optionid = $(options[idx]).data('id');
+                if(optionid == data._id){
                     $(options[idx]).select();
                     break;
                 }
