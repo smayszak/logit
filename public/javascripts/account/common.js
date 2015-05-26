@@ -107,7 +107,7 @@ var accountAccessor = (function(){
 
             if (currentUser == null && account.members.length == 0){
                 debugLog('Account getCurrentUser: sessions storage is empty and there are no users');
-                if(!window.location.href.endsWith('/account/manage')){
+                if(window.location.href.indexOf('/account/manage') < 0){
                     debugLog(window.location);
                     debugLog('Account getCurrentUser: we are not on manage page - so not much we can do, go there');
                     window.location = '/account/manage';

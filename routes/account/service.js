@@ -21,8 +21,18 @@ exports.getAccount = function(req, res){
 }
 
 exports.member_create = function(req, res){
+    console.log(req.body);
     var id = req.query.id;
+    if(id == undefined){
+        console.log('no id set, rejecting');
+        res.send('error - no id defined');
+    }
+
     var newUser = req.body.member;
+    if(newUser == undefined){
+        console.log('no user set, rejecting');
+        res.send('error - no user set');
+    }
     var member = new Members();
     member.name = newUser;
     member.created = new Date();
