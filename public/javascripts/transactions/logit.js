@@ -24,9 +24,25 @@ $( document ).ready(function() {
         if(validatedForm == false)
             return false;
         validatedForm = false;
+        var accountId = accountAccessor.getAccountId();
+        if(accountId == null || accountId == "")
+            return false;
+
+        var currentUser = accountAccessor.getCurrentUser();
+        if(currentUser == null)
+            return false;
+
+        var categoryId = $("#category").find(':selected').data('id');
+
+        if(categoryId == null)
+            return false;
+
         $("#sendit").attr("value", "Saving...");
         var formData = $('form').serialize();
-        formData += "&user=" + accountAccessor.getCurrentUser();
+        formData += "&user=" + currentUser.name;
+        formData += "&userId=" + currentUser._id;
+        formData += "&categoryId=" + categoryId;
+        formData += "&accountId=" + accountId;
         console.log(formData);
         $.ajax({
             url: "/transactions/create",
@@ -34,13 +50,16 @@ $( document ).ready(function() {
             method: 'post'
         }).done(function(data) {
             console.log(data);
-            var  last = "<div data-id='"+data.id+"'>Saved. Click here to edit last record</div>";
-            $("#cost").val("0.00");
-            $("#comments").val('');
+            var  last = "<a href='/transactions/edit?id="+data.id+"'>Saved. Click here to edit last record</a>";
+            $('form')[0].reset()
             $("#lastitem").empty();
             $("#lastitem").append(last);
             $("#sendit").attr("value", "Save");
             $("#sendit").addClass('disabledForm');
+            var logit = new Logit();
+            logit.setTimeZone($("#tz"));
+            logit.setLocalTime($("#dt"));
+            categoryAccessor.defaultCategory(pageAccessor);
         });
         return false;
     });
@@ -87,15 +106,17 @@ var pageAccessor = (function(){
                 $("#category").append(item);
             }
         },
-        defaultCategory : function(data){
+        defaultCategory : function(defCat){
+            debugLog('logit defaultCategory: setting default');
             var options = $('option');
             for(var idx = 0; idx < options.length; idx++){
-                var optionid = $(options[idx]).data('id');
-                if(optionid == data._id){
-                    $(options[idx]).select();
-                    break;
+                if($(options[idx]).text() == defCat){
+                    debugLog('logit defaultCategory: found default');
+                    $(options[idx]).prop('selected', true)
+                    return;
                 }
             }
+            debugLog('logit defaultCategory: no default found');
         }
     };
 })();

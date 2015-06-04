@@ -4,6 +4,9 @@ var Members = mongoose.model( 'member' );
 
 exports.getAccount = function(req, res){
     var id = req.query.id;
+    if(id == null){
+        return res.send(null);
+    }
     Accounts.findById(id, function (err, doc) {
         if(doc == null){
             console.log(err);

@@ -3,7 +3,6 @@
  */
 var mongoose = require( 'mongoose' );
 var Accounts = mongoose.model( 'account' );
-var Members = mongoose.model( 'member' );
 var Category = mongoose.model('category');
 
 exports.delete = function(req, res){
@@ -34,5 +33,16 @@ exports.create = function(req, res){
 };
 
 exports.default = function(req, res){
-    res.send('Beer');
+    var accountId = req.body.accountId;
+    var userId = req.body.userId;
+    var dow = req.body.dow;
+    console.log('sending default');
+    var testData =
+        [   'lunch','coffee','lunch','coffee',
+            'lunch','coffee','lunch','coffee',
+            'lunch','coffee','lunch','coffee',
+            'lunch','coffee','lunch','coffee',
+            'lunch','coffee','lunch','coffee',
+            'lunch','coffee','lunch','coffee']
+    res.send(testData);
 }

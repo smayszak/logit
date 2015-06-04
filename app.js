@@ -48,7 +48,7 @@ app.post('/account/member/create', account_service.member_create);
 
 app.get('/category/manage', category_routes.manage);
 app.get('/category/default', category_service.default);
-app.get('/category/delete', category_service.default);
+app.get('/category/delete', category_service.delete);
 app.post('/category/create', category_service.create);
 
 app.get('/transactions/logit', logit_routes.data_entry);

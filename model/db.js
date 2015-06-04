@@ -24,8 +24,11 @@ var accountSchema = new mongoose.Schema({
 mongoose.model('account', accountSchema);
 
 var transactionSchema =  new mongoose.Schema({
-    category: mongoose.Schema.Types.ObjectId,
-    owner: mongoose.Schema.Types.ObjectId,
+    categoryId: mongoose.Schema.Types.ObjectId,
+    memberId: mongoose.Schema.Types.ObjectId,
+    accountId: mongoose.Schema.Types.ObjectId,
+    category: String,
+    member: String,
     cost: Number,
     date: Date,
     comments: String,

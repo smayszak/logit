@@ -1,8 +1,7 @@
 
 $( document ).ready(function() {
     $("#logout").click(function(evt){
-        $.cookie("logit", null, { path: '/' });
-        localStorage.removeItem('account');
+        accountAccessor.logOut();
     });
     categoryAccessor.setAccount(accountAccessor);
     var loadComplete = function(hasAccount){
@@ -62,6 +61,19 @@ window.getJsonFromLocal = function(key){
 window.setJsonToLocal = function(key, data){
     localStorage.setItem(key, JSON.stringify(data));
 };
+
+window.getJsonFromSession = function(key){
+    var data = sessionStorage.getItem(key);
+    if(data == undefined)
+        return data;
+    return JSON.parse(data);
+
+};
+
+window.setJsonToSession = function(key, data){
+    sessionStorage.setItem(key, JSON.stringify(data));
+};
+
 
 window.zeroPadded = function(val) {
     if (val >= 10)

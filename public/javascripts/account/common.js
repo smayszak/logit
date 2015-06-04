@@ -9,13 +9,13 @@ var accountAccessor = (function(){
             var auth = accountAccessor.parseAuthCookie();
             if(account == null || account == undefined){
                 debugLog('Account load: do not have account');
-                if(auth != ''){
-                    //have cookie but no account data, get it.
-                    debugLog('Account common: have auth key');
-                    account = accountAccessor.getAccount(auth, null, callback);
-                }else{
+                if(auth === null){
                     debugLog("Account load: no account, let running page decide what to do");
                     callback(false);
+                }else{
+                    //have cookie but no account data, get it.
+                    debugLog('Account common: have auth key:' + auth);
+                    account = accountAccessor.getAccount(auth, callback);
                 }
             }else{
                 debugLog('Account load: have account will check if expired');
@@ -32,9 +32,9 @@ var accountAccessor = (function(){
         },
         parseAuthCookie: function(){
             var id = $.cookie('logit');
-            if(id === undefined) {
+            if(id === undefined || id === "null") {
                 debugLog('Account parseAuthCookie: can not find auth cookie');
-                return '';
+                return null;
             }
             debugLog('Account parseAuthCookie: have auth cookie');
             return id;
@@ -103,15 +103,17 @@ var accountAccessor = (function(){
             if(account == null){
                 debugLog('Account getCurrentUser: account is null, go register or sign in or something');
                 window.location = '/account/register';
+                return null;
             }
 
-            if (currentUser == null && account.members.length == 0){
-                debugLog('Account getCurrentUser: sessions storage is empty and there are no users');
+            if (account.members == undefined || account.members.length == 0 ){
+                debugLog('Account getCurrentUser: There are no users');
                 if(window.location.href.indexOf('/account/manage') < 0){
                     debugLog(window.location);
                     debugLog('Account getCurrentUser: we are not on manage page - so not much we can do, go there');
                     window.location = '/account/manage';
                 }
+                return null;
             }
             var current = null;
             if(currentUser == null && account.members.length>0){
@@ -162,10 +164,6 @@ var accountAccessor = (function(){
             debugLog('Account getAccountId: retrieving account id:' + account.id );
             return account.id;
         },
-        getDisplayCategory: function(){
-            debugLog('Account getDisplayCategory: retrieving default category');
-            return "";
-        },
         updateCategoryForMember: function(category, member){
             debugLog('Account updateCategoryForMember: looking for member:'+ member);
             var account = getJsonFromLocal('account');
@@ -178,7 +176,10 @@ var accountAccessor = (function(){
                 }
             }
             debugLog('Account updateCategoryForMember: didnt find it');
+        },
+        logOut: function(){
+            $.cookie("logit", null, { path: '/' });
+            localStorage.clear();
         }
-
     };
 })();
