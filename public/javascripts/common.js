@@ -32,34 +32,68 @@ $( document ).ready(function() {
         $("#menu_users").click(function(){
             $("#user_flyout").toggle('hide-it');
         });
-        runPage();
+        if(window.pageLoadRegister.length > 0){
+            for(var pageIndex = 0; pageIndex < pageLoadRegister.length; pageIndex++){
+                pageLoadRegister[pageIndex]();
+            }
+        }
     }
     accountAccessor.load(loadComplete);
 
 });
 
-window.runPage = function(){
-    //to control application load order use runPage instead of document ready.
-    //override with pages
-};
+window.registerPageLoad = function(pageFunction){
+    window.pageLoadRegister.push(pageFunction);
+}
+window.pageLoadRegister = [];
+
 window.debug = true;
 window.debugLog = function(message){
     if(window.debug == true){
         console.log(message);
-
     }
 }
 
 window.getJsonFromLocal = function(key){
+    debugLog('getJsonFromLocal retrieving:'+key);
+    //check for an expiration
+    var expires = localStorage.getItem(key+"-expire");
+    var expired = false;
+    if(expires == undefined) {
+        debugLog('getJsonFromLocal not an expiring key');
+        expired = false;
+    }else{
+        debugLog('getJsonFromLocal key expires');
+        var date = new Date(parseInt(expires));
+        var now = new Date();
+        if(now > date){
+            debugLog('getJsonFromLocal expired, removing data');
+            expired = true;
+            localStorage.removeItem(key+"-expire");
+            localStorage.removeItem(key);
+        }else{
+            debugLog('getJsonFromLocal key still valid');
+        }
+    }
+    if(expired == true)
+        return undefined;
+
     var data = localStorage.getItem(key);
-    if(data == undefined)
+    if(data == undefined) {
+        debugLog('I couldnt find:'+key)
         return data;
+    }
     return JSON.parse(data);
 
 };
 
-window.setJsonToLocal = function(key, data){
+window.setJsonToLocal = function(key, data, optionHoursToExpire){
     localStorage.setItem(key, JSON.stringify(data));
+    if(optionHoursToExpire != null) {
+        var date = new Date();
+        date = date.setHours(date.getHours() + optionHoursToExpire);
+        localStorage.setItem(key +"-expire", date);
+    }
 };
 
 window.getJsonFromSession = function(key){
@@ -73,7 +107,6 @@ window.getJsonFromSession = function(key){
 window.setJsonToSession = function(key, data){
     sessionStorage.setItem(key, JSON.stringify(data));
 };
-
 
 window.zeroPadded = function(val) {
     if (val >= 10)

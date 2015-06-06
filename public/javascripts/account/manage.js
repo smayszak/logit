@@ -1,7 +1,8 @@
-window.runPage = function(){
+var acctPage = function(){
     debugLog('Account runPage: running page code');
     accountAccessor.updateMembers(pageAccessor);
 };
+window.registerPageLoad(acctPage);
 
 $( document ).ready(function() {
     $("#add").click(function(src){

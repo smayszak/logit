@@ -18,8 +18,14 @@ var categoryAccessor = (function(){
         },
         defaultCategory: function(pageAccessor){
             debugLog('Category defaultCategory: setting default category');
+            var currentUser = accountAccessor.getCurrentUser();
+            var accountId = accountAccessor.getAccountId();
+            if(currentUser == null || accountId == ''){
+                debugLog('Category defaultCategory: do not have users so dont do anything');
+                return;
+            }
             var defaultCategory = '';
-            var categories = window.getJsonFromSession('category');
+            var categories = window.getJsonFromLocal('category:'+currentUser._id);
             var d = new Date();
             var tz = ((d).getTimezoneOffset())/60;
             var offset = (d.getHours() + tz);
@@ -30,20 +36,14 @@ var categoryAccessor = (function(){
             if(categories == undefined){
                 debugLog('Category defaultCategory: do not have default categories for this session');
                 var dow = (new Date()).getDay();
-                var currentUser = accountAccessor.getCurrentUser();
-                var accountId = accountAccessor.getAccountId();
-                if(currentUser == null || accountId == ''){
-                    debugLog('Category defaultCategory: do not have users so dont do anything');
-                    return;
-                }else{
-                    debugLog('Category defaultCategory: calling category service to get defaults');
-                    $.ajax({
-                        url: "/category/default?accountId="+accountId+"&userId="+currentUser._id+"&dow="+dow
-                    }).done(function(data) {
-                        categories = data;
-                        window.setJsonToSession('category', data);
-                    });
-                }
+                debugLog('Category defaultCategory: calling category service to get defaults');
+                $.ajax({
+                    url: "/category/default?accountId="+accountId+"&userId="+currentUser._id+"&dow="+dow
+                }).done(function(data) {
+                    categories = data;
+                    var user = accountAccessor.getCurrentUser();
+                    window.setJsonToLocal('category:'+user._id, data, 24);
+                });
             }
 
             if(categories != null && categories.length >= offset) {

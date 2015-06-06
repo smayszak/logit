@@ -1,12 +1,15 @@
 
-window.runPage = function(){
+var logPage = function(){
+    debugLog("Logit run page");
     categoryAccessor.updateCategories(pageAccessor);
     categoryAccessor.defaultCategory(pageAccessor);
     var logit = new Logit();
-    logit.setTimeZone($("#tz"));
-    logit.setLocalTime($("#dt"));
+    var d = new Date();
+    logit.setTimeZone(d, $("#tz"));
+    logit.setLocalTime(d, $("#dt"));
 };
 
+window.registerPageLoad(logPage);
 
 $( document ).ready(function() {
     $( ".press_btn" ).click(function() {
@@ -43,13 +46,13 @@ $( document ).ready(function() {
         formData += "&userId=" + currentUser._id;
         formData += "&categoryId=" + categoryId;
         formData += "&accountId=" + accountId;
-        console.log(formData);
+        debugLog(formData);
         $.ajax({
             url: "/transactions/create",
             data: formData,
             method: 'post'
         }).done(function(data) {
-            console.log(data);
+            debugLog(data);
             var  last = "<a href='/transactions/edit?id="+data.id+"'>Saved. Click here to edit last record</a>";
             $('form')[0].reset()
             $("#lastitem").empty();
@@ -81,12 +84,11 @@ function enableButton($_control){
 
 function Logit(){
 
-	this.setTimeZone = function($obj){
-        var d = new Date();
+	this.setTimeZone = function(d, $obj){
+
 		$obj.val(d.getTimezoneOffset());
 	}
-	this.setLocalTime = function($obj){
-		var d = new Date();
+	this.setLocalTime = function(d, $obj){
         var dtlog = d.getFullYear()
             +"-"+zeroPadded(d.getMonth() + 1)
             +"-"+zeroPadded(d.getDate())

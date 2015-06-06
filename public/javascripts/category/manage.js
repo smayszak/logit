@@ -1,4 +1,4 @@
-window.runPage = function(){
+var catPage = function(){
     debugLog("Category runPage: loading data");
     categoryAccessor.updateCategories(pageAccessor);
     $("#sendit").click(function(target){
@@ -11,6 +11,7 @@ window.runPage = function(){
         return false;
     });
 };
+window.registerPageLoad(catPage);
 
 var pageAccessor = (function(){
     return {
