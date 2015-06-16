@@ -14,7 +14,8 @@ var express = require('express'),
     category_service = require('./routes/category/service'),
     logit_service = require('./routes/transactions/service'),
     logit_routes = require('./routes/transactions/logit'),
-    reports = require('./routes/reports');
+    report_routes = require('./routes/reports/routes'),
+    report_service = require('./routes/reports/service');
 
 var app = express();
 
@@ -56,6 +57,8 @@ app.get('/transactions/edit', logit_routes.data_edit);
 app.patch('/transactions/edit', logit_service.edit);
 app.delete('/transactions/edit', logit_service.delete);
 app.post('/transactions/create', logit_service.create);
+
+
 
 http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'))
