@@ -1,9 +1,18 @@
 /**
  * Created by mayszaks on 5/6/15.
  */
-var mongoose = require( 'mongoose' ),
-    dbURI = 'mongodb://localhost/logit';
-mongoose.connect(dbURI);
+//dburi = 'mongodb://localhost/logit';
+var dbURI = 'mongodb://172.31.33.60:27017/logit';
+var options = {
+  db: { native_parser: true },
+  server: { poolSize: 5 },
+  user: 'mongoguy',
+  pass: 'grateful'
+}
+
+
+var mongoose = require( 'mongoose' );
+mongoose.connect(dbURI, options);
 
 var categorySchema = new mongoose.Schema({
     name: String
