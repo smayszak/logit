@@ -15,23 +15,7 @@ console.log('loading mongo');
 var mongoose = require( 'mongoose' );
 mongoose.connect(dbURI, options);
 
-mongoose.connection.on('error',function (err) {
-    console.log('Mongoose connection error: ' + err);
-});
-
-mongoose.connection.on('disconnected', function () {
-    console.log('Mongoose disconnected');
-});
-
-process.on('SIGINT', function() {
-    mongoose.connection.close(function () {
-        console.log('Mongoose disconnected through app termination');
-        process.exit(0);
-    });
-});
-
-mongoose.connection.on('open', function(){
-    console.log('opening mongo');
+console.log('opening mongo');
     
     var categorySchema = new mongoose.Schema({
         name: String
@@ -69,4 +53,23 @@ mongoose.connection.on('open', function(){
     });
 
     mongoose.model('transaction', transactionSchema);
+    
+
+mongoose.connection.on('error',function (err) {
+    console.log('Mongoose connection error: ' + err);
+});
+
+mongoose.connection.on('disconnected', function () {
+    console.log('Mongoose disconnected');
+});
+
+process.on('SIGINT', function() {
+    mongoose.connection.close(function () {
+        console.log('Mongoose disconnected through app termination');
+        process.exit(0);
+    });
+});
+
+mongoose.connection.on('open', function(){
+
 });
