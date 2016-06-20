@@ -56,8 +56,11 @@ app.get('/transactions/logit', logit_routes.data_entry);
 app.get('/transactions/edit', logit_routes.data_edit);
 app.patch('/transactions/edit', logit_service.edit);
 app.delete('/transactions/edit', logit_service.delete);
-app.post('/transactions/create', logit_service.create);
 
+app.post('/transactions/create', logit_service.create);
+app.get('/index.html', function(req, res) {
+    res.sendFile(path.join(__dirname + '/index.html'));
+});
 
 
 http.createServer(app).listen(app.get('port'), function(){
