@@ -6,7 +6,7 @@ var dbURI = 'mongodb://172.31.33.60:27017/logit';
 var options = {
   db: { native_parser: true },
   server: { poolSize: 5 },
-  user: 'mongoguy',
+  user: 'mongo_guy',
   pass: 'grateful'
 }
 
@@ -53,7 +53,7 @@ console.log('opening mongo');
     });
 
     mongoose.model('transaction', transactionSchema);
-    
+
 
 mongoose.connection.on('error',function (err) {
     console.log('Mongoose connection error: ' + err);
