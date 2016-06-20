@@ -18,6 +18,7 @@ var express = require('express'),
     report_service = require('./routes/reports/service');
 
 var app = express();
+var path = require('path');
 
 // all environments
 app.set('port', process.env.PORT || 3000);
