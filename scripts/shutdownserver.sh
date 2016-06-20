@@ -1,2 +1,2 @@
-killall -KILL node
-return 0;
+#killall -KILL node
+\
