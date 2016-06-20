@@ -1,0 +1,18 @@
+version: 1.0
+os: linux 
+files:
+  - source: /
+    destination: /users/ubuntu/src/logit
+hooks:
+  ApplicationStop:
+    - location: scripts/shutdownserver.sh
+      timeout: 300
+      runas: root
+  BeforeInstall:
+    - location: scripts/install.sh
+      timeout: 300
+      runas: root
+  ApplicationStart: scripts/startserver.sh
+    - location: 300    
+      timeout: 
+      runas: root
