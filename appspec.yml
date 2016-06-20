@@ -12,7 +12,7 @@ hooks:
     - location: scripts/install.sh
       timeout: 300
       runas: root
-  ApplicationStart: scripts/startserver.sh
-    - location: 300    
-      timeout: 
+  ApplicationStart: 
+    - location: scripts/startserver.sh    
+      timeout: 300
       runas: root
