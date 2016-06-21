@@ -2,7 +2,7 @@ version: 0.0
 os: linux 
 files:
   - source: /
-    destination: /users/ubuntu/src/logit
+    destination: /home/ubuntu/src/logit
 hooks:
   ApplicationStop:
     - location: scripts/shutdownserver.sh
