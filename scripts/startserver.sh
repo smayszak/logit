@@ -1,4 +1,4 @@
 
 echo 'start called'
 pwd
-npm start
+#npm start

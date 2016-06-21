@@ -1,1 +1,2 @@
 echo 'shutdown called'
+pwd
